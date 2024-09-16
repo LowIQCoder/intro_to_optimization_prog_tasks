@@ -47,10 +47,10 @@ def main():
         C, A, b, accuracy = parse_input()
         simplex_method = SimplexMethod()
         solution, optimal_value = simplex_method.solve(C, A, b)
-        print("Optimal solution found:")
+        print("A vector of decision variables")
         for idx, val in enumerate(solution):
             print(f"x{idx + 1} = {val:.{accuracy}f}")
-        print(f"Optimal value of the objective function: {optimal_value:.{accuracy}f}")
+        print(f"Maximum value of the objective function: {optimal_value:.{accuracy}f}")
 
     except Exception as exc:
         print(str(exc))
