@@ -1,7 +1,7 @@
 from simplex_method import SimplexMethod
 
 
-def parse_input() -> tuple[list[float], list[list[float]], list[float], int]:
+def parse_input() -> tuple[list[float], list[list[float]], list[float], float]:
     C: list[float] = list(
         map(
             float,
@@ -34,10 +34,21 @@ def parse_input() -> tuple[list[float], list[list[float]], list[float], int]:
         )
         b.append(b_value)
 
-    accuracy: int = int(input("Enter the number of decimal places for output: "))
+    accuracy: float = float(input("Enter the accuracy of the solution: "))
 
     return C, A, b, accuracy
 
+
+def print_problem(C: list[float], A: list[list[float]], b: list[float]):
+    print("Optimization problem:")
+    objective = " + ".join([f"{c:.2f} * x{i+1}" for i, c in enumerate(C)])
+    print(f"max z = {objective}")
+    print("subject to:")
+    for i, constraint in enumerate(A):
+        constraint_str = " + ".join(
+            [f"{coef:.2f} * x{j+1}" for j, coef in enumerate(constraint)]
+        )
+        print(f"  {constraint_str} <= {b[i]:.2f}")
 
 def main():
     """
@@ -45,12 +56,14 @@ def main():
     """
     try:
         C, A, b, accuracy = parse_input()
+        print_problem(C, A, b)
         simplex_method = SimplexMethod()
-        solution, optimal_value = simplex_method.solve(C, A, b)
+        solution, optimal_value = simplex_method.solve(C, A, b, accuracy)
+        print("\nSolution:")
         print("A vector of decision variables")
         for idx, val in enumerate(solution):
-            print(f"x{idx + 1} = {val:.{accuracy}f}")
-        print(f"Maximum value of the objective function: {optimal_value:.{accuracy}f}")
+            print(f"x{idx + 1} = {val}")
+        print(f"Maximum value of the objective function: {optimal_value}")
 
     except Exception as exc:
         print(str(exc))

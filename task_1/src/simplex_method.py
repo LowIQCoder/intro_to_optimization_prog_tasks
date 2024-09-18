@@ -1,6 +1,6 @@
 class SimplexMethod:
     def solve(
-        self, C: list[float], A: list[list[float]], b: list[float]
+        self, C: list[float], A: list[list[float]], b: list[float], accuracy: float
     ) -> tuple[list[float], float]:
         """
         Solves the Linear Programming problem using the Simplex method.
@@ -14,6 +14,7 @@ class SimplexMethod:
         self.C = C
         self.A = A
         self.b = b
+        self.accuracy = accuracy
         self.num_constraints = len(A)
         self.num_variables = len(C)
         self.tableau = self.__initialize_tableau()
@@ -28,7 +29,7 @@ class SimplexMethod:
 
             pivot_row = self.__find_pivot_row(pivot_col)
             if pivot_row is None:
-                raise Exception("The method is not applicable!")
+                raise Exception("The problem is unbounded")
 
             self.__pivot(pivot_row, pivot_col)
 
@@ -39,7 +40,10 @@ class SimplexMethod:
     def __initialize_tableau(self) -> list[list[float]]:
         """Initializes the simplex tableau with slack variables."""
         tableau = [
-            row + [0] * self.num_constraints + [rhs] for row, rhs in zip(self.A, self.b)
+            [element if element > self.accuracy else 0.0 for element in row]
+            + [0] * self.num_constraints
+            + [rhs]
+            for row, rhs in zip(self.A, self.b)
         ]
         for i in range(self.num_constraints):
             tableau[i][self.num_variables + i] = 1
@@ -72,7 +76,7 @@ class SimplexMethod:
         pivot_row = None
         for i in range(self.num_constraints):
             element = self.tableau[i][pivot_col]
-            if element > 0:
+            if element > self.accuracy:
                 ratio = self.tableau[i][-1] / element
                 if ratio < min_ratio:
                     min_ratio = ratio
