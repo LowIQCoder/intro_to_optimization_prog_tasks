@@ -79,7 +79,7 @@ class SimplexMethod:
             if -self.accuracy <= element <= self.accuracy:
                 continue
             ratio = self.table[i][-1] / element
-            if ratio < min_ratio:
+            if ratio > 0 and ratio < min_ratio:
                 min_ratio = ratio
                 pivot_row = i
         return pivot_row
