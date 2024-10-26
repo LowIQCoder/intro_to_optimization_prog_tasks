@@ -18,7 +18,7 @@ class SimplexMethod:
         self.table = self.__initialize_table()
 
         if any(rhs < 0 for rhs in self.b):
-            raise Exception("The method is not applicable!")
+            raise Exception("The simplex method is not applicable!")
 
         while True:
             pivot_col = self.__find_pivot_col()
@@ -27,7 +27,7 @@ class SimplexMethod:
 
             pivot_row = self.__find_pivot_row(pivot_col)
             if pivot_row is None:
-                raise Exception("The method is not applicable!")
+                raise Exception("The simplex method is not applicable!")
 
             self.__pivot(pivot_row, pivot_col)
 
